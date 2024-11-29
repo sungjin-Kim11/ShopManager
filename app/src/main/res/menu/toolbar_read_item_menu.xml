@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/toolbar_read_menu_item_modify"
+        android:icon="@drawable/edit_24px"
+        android:title="메모 수정"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/toolbar_read_menu_item_delete"
+        android:icon="@drawable/delete_24px"
+        android:title="메모 삭제"
+        app:showAsAction="ifRoom" />
+</menu>

@@ -44,10 +44,10 @@ class ItemListFragment : Fragment() {
     // Toolbar를 구성하는 메서드
     fun settingToolbar(){
         fragmentItemListFragment.apply {
-            toolbarShowMemoAll.title = "전체 물건"
+            toolbarItemList.title = "전체 물건"
             // 네비게이션 아이콘을 설정하고 누를 경우 NavigationView가 나타나도록 한다.
-            toolbarShowMemoAll.setNavigationIcon(R.drawable.menu_24px)
-            toolbarShowMemoAll.setNavigationOnClickListener {
+            toolbarItemList.setNavigationIcon(R.drawable.menu_24px)
+            toolbarItemList.setNavigationOnClickListener {
                 mainActivity.activityMainBinding.drawerLayoutMain.open()
             }
         }
@@ -56,10 +56,10 @@ class ItemListFragment : Fragment() {
     // RecyclerView를 구성하는 메서드
     fun settingRecyclerView(){
         fragmentItemListFragment.apply {
-            recyclerViewShowMemoAll.adapter = RecyclerShowMemoAdapter()
-            recyclerViewShowMemoAll.layoutManager = LinearLayoutManager(mainActivity)
+            recyclerViewItemList.adapter = RecyclerShowMemoAdapter()
+            recyclerViewItemList.layoutManager = LinearLayoutManager(mainActivity)
             val deco = MaterialDividerItemDecoration(mainActivity, MaterialDividerItemDecoration.VERTICAL)
-            recyclerViewShowMemoAll.addItemDecoration(deco)
+            recyclerViewItemList.addItemDecoration(deco)
         }
     }
 
@@ -67,7 +67,7 @@ class ItemListFragment : Fragment() {
     fun settingButton(){
         fragmentItemListFragment.apply {
             // fab를 누를 때
-            fabShowMemoAllAdd.setOnClickListener {
+            fabItemListAdd.setOnClickListener {
                 // AddMemoFragment가 나타나게 한다.
                 mainActivity.replaceFragment(FragmentName.ADD_ITEM_FRAGMENT, true, true, null)
             }

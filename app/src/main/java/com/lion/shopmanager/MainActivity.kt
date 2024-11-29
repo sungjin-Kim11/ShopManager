@@ -1,6 +1,9 @@
 package com.lion.shopmanager
 
 import android.os.Bundle
+import android.os.SystemClock
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,7 +15,10 @@ import com.lion.shopmanager.databinding.ActivityMainBinding
 import com.lion.shopmanager.databinding.NavigationHeaderLayoutBinding
 import com.lion.shopmanager.fragment.AddItemFragment
 import com.lion.shopmanager.fragment.ItemListFragment
+import com.lion.shopmanager.fragment.ModifyItemFragment
+import com.lion.shopmanager.fragment.ReadItemFragment
 import com.lion.shopmanager.util.FragmentName
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,33 +60,18 @@ class MainActivity : AppCompatActivity() {
             // 네비게이션 뷰의 메뉴 중 전체 메모가 선택되어 있는 상태로 설정한다.
             navigationViewMain.setCheckedItem(R.id.navigation_menu_item_all)
 
-            // 새로운 메뉴 추가
-//            val menuItem = navigationViewMain.menu.findItem(R.id.navigation_menu_item_memo_category)
-//            menuItem.subMenu?.add(Menu.NONE, 100, Menu.NONE, "새로추가한 메뉴")
-//            val subMenuItem = menuItem.subMenu?.findItem(100)
-//            subMenuItem?.setIcon(R.drawable.lock_24px)
-
             // 네비게이션의 메뉴를 눌렀을 때
             navigationViewMain.setNavigationItemSelectedListener {
                 when(it.itemId){
-//                    R.id.navigation_menu_item_all -> {
-//                        replaceFragment(FragmentName.SHOW_MEMO_ALL_FRAGMENT, false, false, null)
-//                    }
-//                    R.id.navigation_menu_item_favorite -> {
-//                        replaceFragment(FragmentName.SHOW_MEMO_ALL_FRAGMENT, false, false, null)
-//                    }
-//                    R.id.navigation_menu_item_secret -> {
-//                        replaceFragment(FragmentName.SHOW_MEMO_ALL_FRAGMENT, false, false, null)
-//                    }
-//                    R.id.navigation_menu_item_management_category -> {
-//                        replaceFragment(FragmentName.CATEGORY_MANAGEMENT_FRAGMENT, false, false, null)
-//                    }
-//                    R.id.navigation_menu_item_category_basic -> {
-//                        replaceFragment(FragmentName.SHOW_MEMO_ALL_FRAGMENT, false, false, null)
-//                    }
-//                    else -> {
-//                        replaceFragment(FragmentName.SHOW_MEMO_ALL_FRAGMENT, false, false, null)
-//                    }
+                    R.id.navigation_menu_item_all -> {
+                        replaceFragment(FragmentName.ITEM_LIST_FRAGMENT, false, false, null)
+                    }
+                    R.id.navigation_menu_item_selling -> {
+                        replaceFragment(FragmentName.ITEM_LIST_FRAGMENT, false, false, null)
+                    }
+                    R.id.navigation_menu_item_sold -> {
+                        replaceFragment(FragmentName.ITEM_LIST_FRAGMENT, false, false, null)
+                    }
                 }
 
                 // 닫아준다.
@@ -97,7 +88,8 @@ class MainActivity : AppCompatActivity() {
             // 전체 메모 화면
             FragmentName.ITEM_LIST_FRAGMENT -> ItemListFragment()
             FragmentName.ADD_ITEM_FRAGMENT -> AddItemFragment()
-            FragmentName.READ_ITEM_FRAGMENT -> AddItemFragment()
+            FragmentName.READ_ITEM_FRAGMENT -> ReadItemFragment()
+            FragmentName.MODIFY_ITEM_FRAGMENT -> ModifyItemFragment()
         }
 
         // bundle 객체가 null이 아니라면
@@ -125,5 +117,31 @@ class MainActivity : AppCompatActivity() {
     // 프래그먼트를 BackStack에서 제거하는 메서드
     fun removeFragment(fragmentName: FragmentName){
         supportFragmentManager.popBackStack(fragmentName.str, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
+
+    // 키보드 올리는 메서드
+    fun showSoftInput(view: View){
+        // 입력을 관리하는 매니저
+        val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        // 포커스를 준다.
+        view.requestFocus()
+
+        thread {
+            SystemClock.sleep(500)
+            // 키보드를 올린다.
+            inputManager.showSoftInput(view, 0)
+        }
+    }
+    // 키보드를 내리는 메서드
+    fun hideSoftInput(){
+        // 포커스가 있는 뷰가 있다면
+        if(currentFocus != null){
+            // 입력을 관리하는 매니저
+            val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            // 키보드를 내린다.
+            inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+            // 포커스를 해제한다.
+            currentFocus?.clearFocus()
+        }
     }
 }

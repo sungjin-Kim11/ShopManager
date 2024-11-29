@@ -5,5 +5,6 @@ enum class FragmentName(val number:Int, var str:String){
     ITEM_LIST_FRAGMENT(1,"ItemListFragment"),
     ADD_ITEM_FRAGMENT(2,"AddItemFragment"),
     READ_ITEM_FRAGMENT(3,"ReadItemFragment"),
+    MODIFY_ITEM_FRAGMENT(4,"ModifyItemFragment")
 
 }
