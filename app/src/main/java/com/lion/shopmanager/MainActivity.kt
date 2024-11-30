@@ -1,5 +1,6 @@
 package com.lion.shopmanager
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialSharedAxis
 import com.lion.shopmanager.databinding.ActivityMainBinding
 import com.lion.shopmanager.databinding.NavigationHeaderLayoutBinding
@@ -42,7 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         // 첫 화면을 설정해준다.
         replaceFragment(FragmentName.ITEM_LIST_FRAGMENT, false, false, null)
-
     }
 
     // 네비게이션 뷰를 구성하는 메서드
@@ -143,5 +144,16 @@ class MainActivity : AppCompatActivity() {
             // 포커스를 해제한다.
             currentFocus?.clearFocus()
         }
+    }
+
+    // 확인 버튼만 있는 다이얼로그를 띄우는 메서드
+    fun showConfirmDialog(title:String, message:String, callback:() -> Unit){
+        val builder = MaterialAlertDialogBuilder(this)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setPositiveButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+            callback()
+        }
+        builder.show()
     }
 }
