@@ -54,7 +54,6 @@ class ReadItemFragment : Fragment() {
                         val itemIdx = arguments?.getInt("itemIdx")
                         val dataBundle = Bundle()
                         dataBundle.putInt("itemIdx", itemIdx!!)
-                        Log.d("ReadItemFragment", "itemIdx passed: $itemIdx")
                         mainActivity.replaceFragment(FragmentName.MODIFY_ITEM_FRAGMENT, true, true, dataBundle)
                     }
                     R.id.toolbar_read_menu_item_delete -> {
@@ -81,7 +80,6 @@ class ReadItemFragment : Fragment() {
             val work1 = async(Dispatchers.IO){
                 // 제품 번호를 가져온다.
                 val itemIdx = arguments?.getInt("itemIdx")
-                Log.d("ReadItemFragment", "itemIdx passed: $itemIdx")
                 // 제품 데이터를 가져온다.
                 ItemRepository.selectItemDataByItemIdx(mainActivity, itemIdx!!)
             }
