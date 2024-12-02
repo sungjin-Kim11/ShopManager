@@ -91,7 +91,13 @@ class ReadItemFragment : Fragment() {
                 textFieldReadItemPrice.editText?.setText(itemModel.itemPrice.toString())
                 textFieldReadItemAbout.editText?.setText(itemModel.itemAbout)
                 textFieldReadItemSellingOrSold.editText?.setText(itemModel.itemSellinOrSold.str)
-                imageReadView.setImageBitmap(BitmapFactory.decodeFile(itemModel.itemImage))
+                if (itemModel.itemImage.isNotEmpty()) {
+                    // 이미지 경로가 존재하면 파일에서 이미지를 로드
+                    imageReadView.setImageBitmap(BitmapFactory.decodeFile(itemModel.itemImage))
+                } else {
+                    // 이미지 경로가 비어있으면 기본 이미지를 설정
+                    imageReadView.setImageResource(R.drawable.image_24px)
+                }
             }
         }
     }

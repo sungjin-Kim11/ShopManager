@@ -23,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.io.File
 
 class filterSoldItemFragment : Fragment() {
 
@@ -115,7 +116,21 @@ class filterSoldItemFragment : Fragment() {
             // 텍스트 및 이미지 설정
             holder.rowText2Binding.textViewRowName.text = item.itemName
             holder.rowText2Binding.imageListItemView.setImageURI(item.itemImage.toUri())
-            holder.rowText2Binding.textViewDate.text = item.itemDate
+
+            // 이미지 설정: 파일 경로 확인 후 기본 이미지 처리
+            if (item.itemImage.isNotEmpty()) {
+                val imageFile = File(item.itemImage)
+                if (imageFile.exists() && imageFile.isFile) {
+                    // 유효한 이미지 파일이 있는 경우 URI 설정
+                    holder.rowText2Binding.imageListItemView.setImageURI(item.itemImage.toUri())
+                } else {
+                    // 이미지 파일이 없거나 유효하지 않으면 기본 이미지 설정
+                    holder.rowText2Binding.imageListItemView.setImageResource(R.drawable.image_24px)
+                }
+            } else {
+                // 이미지 경로가 비어 있으면 기본 이미지 설정
+                holder.rowText2Binding.imageListItemView.setImageResource(R.drawable.image_24px)
+            }
         }
 
     }

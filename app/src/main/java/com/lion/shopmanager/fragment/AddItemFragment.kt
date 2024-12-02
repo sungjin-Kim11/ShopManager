@@ -35,8 +35,11 @@ class AddItemFragment : Fragment() {
         fragmentAddItemBinding = FragmentAddItemBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
+        // Toolbar를 구성하는 메서드 호출
         settingToolbar()
+        // 입력 요소 초기 설정 메서드 호출
         settingTextField()
+        // 이미지를 불러오는 메서드 호출
         callImage()
 
         return fragmentAddItemBinding.root
@@ -66,13 +69,14 @@ class AddItemFragment : Fragment() {
         }
     }
 
-    // 입력 요소 초기 설정
+    // 입력 요소 초기 설정 메서드
     fun settingTextField(){
         fragmentAddItemBinding.apply {
             mainActivity.showSoftInput(textInputLayoutName.editText!!)
         }
     }
 
+    // 이미지를 불러오는 메서드
     fun callImage() {
         fragmentAddItemBinding.buttonInputSearchphoto.setOnClickListener {
             mainActivity.setTargetImageView(fragmentAddItemBinding.imageAddView)
