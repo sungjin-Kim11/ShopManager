@@ -51,6 +51,28 @@ class ItemRepository {
             return tempList
         }
 
+        // 제품 이름으로 검색하여 제품 데이터 전체를 가져오는 메서드
+        fun selectItemDataAllByItemName(context: Context, itemName:String) : MutableList<ItemModel>{
+            // 데이터를 가져온다.
+            val itemDatabase = ItemDatabase.getInstance(context)
+            val itemList = itemDatabase?.itemDao()?.selectItemDataAllByItemName(itemName)
+
+            // 제품 데이터를 담을 리스트
+            val tempList = mutableListOf<ItemModel>()
+
+            // 학생의 수 만큼 반복한다.
+            itemList?.forEach {
+                val itemModel = ItemModel(
+                    it.itemIdx, it.itemName, it.itemPrice, it.itemAbout,
+                    numberToItemSellingOrSold(it.itemSellinOrSold),
+                    it.itemImage, it.itemDate
+                )
+                // 리스트에 담는다.
+                tempList.add(itemModel)
+            }
+            return tempList
+        }
+
         // 제품 한 개의 데이터를 가져오는 메서드
         fun selectItemDataByItemIdx(context: Context, itemIdx: Int): ItemModel {
             val itemDatabase = ItemDatabase.getInstance(context)

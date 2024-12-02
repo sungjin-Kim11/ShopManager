@@ -115,7 +115,7 @@ class filterSoldItemFragment : Fragment() {
 
             // 텍스트 및 이미지 설정
             holder.rowText2Binding.textViewRowName.text = item.itemName
-            holder.rowText2Binding.imageListItemView.setImageURI(item.itemImage.toUri())
+            holder.rowText2Binding.textViewDate.text = item.itemDate
 
             // 이미지 설정: 파일 경로 확인 후 기본 이미지 처리
             if (item.itemImage.isNotEmpty()) {

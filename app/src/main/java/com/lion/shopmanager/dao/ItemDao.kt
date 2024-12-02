@@ -21,6 +21,14 @@ interface ItemDao {
     """)
     fun selectItemAll() : List<ItemVO>
 
+    // 제품 이름으로 제품 정보를 가져오는 메서드
+    @Query("""
+        select * from ItemTable
+        where itemName = :itemName
+        order by itemIdx desc
+    """)
+    fun selectItemDataAllByItemName(itemName:String):List<ItemVO>
+
     // 제품 하나의 정보를 가져오는 메서드
     @Query("""
         select * from ItemTable

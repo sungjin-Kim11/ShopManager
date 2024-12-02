@@ -1,7 +1,6 @@
 package com.lion.shopmanager.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.lion.shopmanager.MainActivity
 import com.lion.shopmanager.R
-import com.lion.shopmanager.databinding.FragmentItemListBinding
+import com.lion.shopmanager.databinding.FragmentSearchItemBinding
 import com.lion.shopmanager.databinding.RowText2Binding
 import com.lion.shopmanager.model.ItemModel
 import com.lion.shopmanager.repository.ItemRepository
@@ -26,95 +25,77 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.File
 
-class ItemListFragment : Fragment() {
+class SearchItemFragment : Fragment() {
 
-    lateinit var fragmentItemListFragment: FragmentItemListBinding
+    lateinit var fragmentSearchItemFragment: FragmentSearchItemBinding
     lateinit var mainActivity: MainActivity
 
     var itemList = mutableListOf<ItemModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        fragmentItemListFragment = FragmentItemListBinding.inflate(inflater, container, false)
+        fragmentSearchItemFragment = FragmentSearchItemBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
-        // Toolbar를 구성하는 메서드를 호출한다.
-        settingToolbar()
-        // RecyclerView를 구성하는 메서드를 호출한다.
-        settingRecyclerView()
-        // 버튼을 설정하는 메서드를 호출한다.
-        settingButton()
-        // 제품 정보를 가져와 RecyclerView를 갱신하는 메서드를 호출한다.
-        refreshRecyclerView()
+        // 툴바를 구성하는 메서드
+        settingToolbarSearchItem()
+        // recyclerView를 구성하는 메서드
+        settingRecyclerViewSearchItem()
+        // 입력 요소 설정 메서드를 호출한다.
+        settingTextField()
 
-        return fragmentItemListFragment.root
+        return fragmentSearchItemFragment.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        // 프래그먼트 재활성화 시 데이터를 새로고침
-        refreshRecyclerView()
-    }
+    // 툴바를 구성하는 메서드
+    fun settingToolbarSearchItem(){
+        fragmentSearchItemFragment.apply {
+            toolbarSearchItem.title = "제품 정보 검색"
 
-    // Toolbar를 구성하는 메서드
-    fun settingToolbar() {
-        fragmentItemListFragment.apply {
-            toolbarItemList.title = "전체 제품 목록"
-            toolbarItemList.setNavigationIcon(R.drawable.menu_24px)
-            toolbarItemList.setNavigationOnClickListener {
-                mainActivity.activityMainBinding.drawerLayoutMain.open()
+            toolbarSearchItem.setNavigationIcon(R.drawable.arrow_back_24px)
+            toolbarSearchItem.setNavigationOnClickListener {
+                mainActivity.removeFragment(FragmentName.SEARCH_ITEM_FRAGMENT)
             }
+        }
+    }
 
-            // 메뉴
-            toolbarItemList.inflateMenu(R.menu.toolbar_item_list_menu)
-            toolbarItemList.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    // 검색
-                    R.id.toolbar_item_list_search -> {
-                        mainActivity.replaceFragment(FragmentName.SEARCH_ITEM_FRAGMENT, true, true, null)
+    // 입력 요소 설정
+    fun settingTextField(){
+        fragmentSearchItemFragment.apply {
+            // 검색창에 포커스를 준다.
+            mainActivity.showSoftInput(textFieldSearchItemName.editText!!)
+            // 키보드의 엔터를 누르면 동작하는 리스너
+            textFieldSearchItemName.editText?.setOnEditorActionListener { v, actionId, event ->
+                // 검색 데이터를 가져와 보여준다.
+                CoroutineScope(Dispatchers.Main).launch {
+                    val work1 = async(Dispatchers.IO){
+                        val keyword = textFieldSearchItemName.editText?.text.toString()
+                        ItemRepository.selectItemDataAllByItemName(mainActivity, keyword)
                     }
+                    itemList = work1.await()
+                    recyclerViewSearchItem.adapter?.notifyDataSetChanged()
                 }
+                mainActivity.hideSoftInput()
                 true
             }
         }
     }
 
-    // RecyclerView를 구성하는 메서드
-    fun settingRecyclerView() {
-        fragmentItemListFragment.apply {
-            recyclerViewItemList.adapter = RecyclerViewMainAdapter()
-            recyclerViewItemList.layoutManager = LinearLayoutManager(mainActivity)
+    // recyclerView를 구성하는 메서드
+    fun settingRecyclerViewSearchItem(){
+        fragmentSearchItemFragment.apply {
+            recyclerViewSearchItem.adapter = RecyclerViewMainAdapter()
+            recyclerViewSearchItem.layoutManager = LinearLayoutManager(mainActivity)
             val deco = MaterialDividerItemDecoration(mainActivity, MaterialDividerItemDecoration.VERTICAL)
-            recyclerViewItemList.addItemDecoration(deco)
+            recyclerViewSearchItem.addItemDecoration(deco)
         }
     }
 
-    // 버튼을 설정하는 메서드
-    fun settingButton() {
-        fragmentItemListFragment.apply {
-            fabItemListAdd.setOnClickListener {
-                mainActivity.replaceFragment(FragmentName.ADD_ITEM_FRAGMENT, true, true, null)
-            }
-        }
-    }
-
-    // 데이터베이스에서 데이터를 읽어와 RecyclerView를 갱신한다.
-    fun refreshRecyclerView() {
-        CoroutineScope(Dispatchers.Main).launch {
-            val work1 = async(Dispatchers.IO) {
-                // 데이터를 읽어온다.
-                ItemRepository.selectItemDataAll(mainActivity)
-            }
-            itemList = work1.await()
-            // RecyclerView를 갱신한다.
-            fragmentItemListFragment.recyclerViewItemList.adapter?.notifyDataSetChanged()
-        }
-    }
-
-    // RecyclerView의 어댑터
+    // RecyclerView의 어뎁터
     inner class RecyclerViewMainAdapter : RecyclerView.Adapter<RecyclerViewMainAdapter.ViewHolderMain>() {
         // ViewHolder
-        inner class ViewHolderMain(val rowText2Binding: RowText2Binding) : RecyclerView.ViewHolder(rowText2Binding.root), OnClickListener {
+        inner class ViewHolderMain(val rowText2Binding: RowText2Binding) : RecyclerView.ViewHolder(rowText2Binding.root),
+            OnClickListener {
             override fun onClick(v: View?) {
                 // 사용자가 누른 제품의 제품 번호를 담아준다.
                 val dataBundle = Bundle()
@@ -141,20 +122,25 @@ class ItemListFragment : Fragment() {
             holder.rowText2Binding.textViewRowName.text = item.itemName
             holder.rowText2Binding.textViewDate.text = item.itemDate
 
-            // 이미지 설정: 파일 경로 확인 후 기본 이미지 처리
+            // 이미지 설정
             if (item.itemImage.isNotEmpty()) {
                 val imageFile = File(item.itemImage)
                 if (imageFile.exists() && imageFile.isFile) {
+                    // 유효한 이미지 파일이 있는 경우 URI 설정
                     holder.rowText2Binding.imageListItemView.setImageURI(item.itemImage.toUri())
                 } else {
+                    // 이미지 파일이 없거나 유효하지 않으면 기본 이미지 설정
                     holder.rowText2Binding.imageListItemView.setImageResource(R.drawable.image_24px)
                 }
             } else {
+                // 이미지 경로가 비어 있으면 기본 이미지 설정
                 holder.rowText2Binding.imageListItemView.setImageResource(R.drawable.image_24px)
             }
 
+
             // 판매 상태에 따라 텍스트 색상 및 배경 색상 설정
             if (item.itemSellinOrSold == ItemSellingOrSold.ITEM_SOLD) {
+                // 판매완료 상태
                 holder.rowText2Binding.root.setBackgroundColor(
                     ContextCompat.getColor(holder.itemView.context, R.color.sold_color_background)
                 )

@@ -28,6 +28,7 @@ import com.lion.shopmanager.fragment.AddItemFragment
 import com.lion.shopmanager.fragment.ItemListFragment
 import com.lion.shopmanager.fragment.ModifyItemFragment
 import com.lion.shopmanager.fragment.ReadItemFragment
+import com.lion.shopmanager.fragment.SearchItemFragment
 import com.lion.shopmanager.fragment.filterSellingItemFragment
 import com.lion.shopmanager.fragment.filterSoldItemFragment
 import com.lion.shopmanager.util.FragmentName
@@ -136,6 +137,7 @@ class MainActivity : AppCompatActivity() {
             FragmentName.MODIFY_ITEM_FRAGMENT -> ModifyItemFragment()
             FragmentName.FILTER_SELLING_ITEM_FRAGMENT -> filterSellingItemFragment()
             FragmentName.FILTER_SOLD_ITEM_FRAGMENT -> filterSoldItemFragment()
+            FragmentName.SEARCH_ITEM_FRAGMENT -> SearchItemFragment()
         }
 
         // bundle 객체가 null이 아니라면

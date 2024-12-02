@@ -7,7 +7,8 @@ enum class FragmentName(val number:Int, var str:String) {
     READ_ITEM_FRAGMENT(3, "ReadItemFragment"),
     MODIFY_ITEM_FRAGMENT(4, "ModifyItemFragment"),
     FILTER_SELLING_ITEM_FRAGMENT(5, "FilterSellingItemFragment"),
-    FILTER_SOLD_ITEM_FRAGMENT(6, "FilterSoldItemFragment")
+    FILTER_SOLD_ITEM_FRAGMENT(6, "FilterSoldItemFragment"),
+    SEARCH_ITEM_FRAGMENT(7, "SearchItemFragment"),
 }
 
 // 판매 유무를 나타내는 값
