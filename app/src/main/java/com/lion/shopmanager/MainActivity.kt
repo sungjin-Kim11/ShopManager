@@ -28,6 +28,8 @@ import com.lion.shopmanager.fragment.AddItemFragment
 import com.lion.shopmanager.fragment.ItemListFragment
 import com.lion.shopmanager.fragment.ModifyItemFragment
 import com.lion.shopmanager.fragment.ReadItemFragment
+import com.lion.shopmanager.fragment.filterSellingItemFragment
+import com.lion.shopmanager.fragment.filterSoldItemFragment
 import com.lion.shopmanager.util.FragmentName
 import java.io.File
 import java.io.FileOutputStream
@@ -109,10 +111,10 @@ class MainActivity : AppCompatActivity() {
                         replaceFragment(FragmentName.ITEM_LIST_FRAGMENT, false, false, null)
                     }
                     R.id.navigation_menu_item_selling -> {
-                        replaceFragment(FragmentName.ITEM_LIST_FRAGMENT, false, false, null)
+                        replaceFragment(FragmentName.FILTER_SELLING_ITEM_FRAGMENT, false, false, null)
                     }
                     R.id.navigation_menu_item_sold -> {
-                        replaceFragment(FragmentName.ITEM_LIST_FRAGMENT, false, false, null)
+                        replaceFragment(FragmentName.FILTER_SOLD_ITEM_FRAGMENT, false, false, null)
                     }
                 }
 
@@ -132,6 +134,8 @@ class MainActivity : AppCompatActivity() {
             FragmentName.ADD_ITEM_FRAGMENT -> AddItemFragment()
             FragmentName.READ_ITEM_FRAGMENT -> ReadItemFragment()
             FragmentName.MODIFY_ITEM_FRAGMENT -> ModifyItemFragment()
+            FragmentName.FILTER_SELLING_ITEM_FRAGMENT -> filterSellingItemFragment()
+            FragmentName.FILTER_SOLD_ITEM_FRAGMENT -> filterSoldItemFragment()
         }
 
         // bundle 객체가 null이 아니라면
