@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -135,6 +136,8 @@ class ItemListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolderMain, position: Int) {
             holder.rowText2Binding.textViewRowName.text = itemList[position].itemName
+            holder.rowText2Binding.imageListItemView.setImageURI(itemList[position].itemImage.toUri())
+            holder.rowText2Binding.textViewDate.text = itemList[position].itemDate
         }
     }
 }

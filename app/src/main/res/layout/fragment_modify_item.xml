@@ -119,9 +119,9 @@
             <ImageView
                 android:id="@+id/imageModifyView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_margin="10dp"
-                android:src="@drawable/image_48px" />
+                android:src="@drawable/image_24px" />
 
             <Button
                 android:id="@+id/buttonModifySearchphoto"

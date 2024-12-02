@@ -15,7 +15,9 @@ data class ItemVO(
     // 제품 정보
     var itemAbout:String = "",
     // 제품 유무
-    var itemSellinOrSold: Int = 0
+    var itemSellinOrSold: Int = 0,
     // 제품 사진
-    // var itemImage:String = ""
+    var itemImage:String = "",
+    // 저장 날짜
+    var itemDate:String = ""
 )

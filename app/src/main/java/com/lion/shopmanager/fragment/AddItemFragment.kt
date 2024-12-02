@@ -1,6 +1,9 @@
 package com.lion.shopmanager.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +12,6 @@ import android.view.ViewGroup
 import com.lion.shopmanager.MainActivity
 import com.lion.shopmanager.R
 import com.lion.shopmanager.databinding.FragmentAddItemBinding
-import com.lion.shopmanager.databinding.FragmentItemListBinding
 import com.lion.shopmanager.model.ItemModel
 import com.lion.shopmanager.repository.ItemRepository
 import com.lion.shopmanager.util.FragmentName
@@ -18,22 +20,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class AddItemFragment : Fragment() {
 
     lateinit var fragmentAddItemBinding: FragmentAddItemBinding
     lateinit var mainActivity: MainActivity
 
+    private var selectedImagePath: String = ""
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         fragmentAddItemBinding = FragmentAddItemBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
-        // Toolbar를 구성하는 메서드
         settingToolbar()
-
-        // 입력 요소 초기 설정
         settingTextField()
+        callImage()
 
         return fragmentAddItemBinding.root
     }
@@ -67,6 +71,17 @@ class AddItemFragment : Fragment() {
         fragmentAddItemBinding.apply {
             mainActivity.showSoftInput(textInputLayoutName.editText!!)
         }
+    }
+
+    fun callImage() {
+        fragmentAddItemBinding.buttonInputSearchphoto.setOnClickListener {
+            mainActivity.setTargetImageView(fragmentAddItemBinding.imageAddView)
+            mainActivity.launchAlbumIntent()
+        }
+    }
+
+    fun updateSelectedImagePath(path: String) {
+        selectedImagePath = path
     }
 
     // 물건 정보 등록 완료 처리 메서드
@@ -107,9 +122,13 @@ class AddItemFragment : Fragment() {
                 else -> ItemSellingOrSold.ITEM_SOLD
             }
 
+            val currentDateTime = LocalDateTime.now() // 현재 날짜와 시간
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") // 원하는 형식
+            val itemDate = currentDateTime.format(formatter)
+
             // ViewModel 객체에 담는다.
             val itemModel = ItemModel(
-                0, itemName, itemPriceInt, itemabout, itemSellinOrSold)
+                0, itemName, itemPriceInt, itemabout, itemSellinOrSold, itemImage = selectedImagePath, itemDate)
 
             // 데이터를 저장하는 메서드를 호출한다.
             CoroutineScope(Dispatchers.Main).launch{

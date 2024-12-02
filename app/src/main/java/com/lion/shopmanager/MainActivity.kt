@@ -1,11 +1,20 @@
 package com.lion.shopmanager
 
 import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.MediaStore
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,18 +29,33 @@ import com.lion.shopmanager.fragment.ItemListFragment
 import com.lion.shopmanager.fragment.ModifyItemFragment
 import com.lion.shopmanager.fragment.ReadItemFragment
 import com.lion.shopmanager.util.FragmentName
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
-    val activityMainBinding by lazy{
+    val activityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+
+    private lateinit var albumLauncher: ActivityResultLauncher<Intent>
+
+    // 확인할 권한들
+    val permissionList = arrayOf(
+        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+        android.Manifest.permission.ACCESS_MEDIA_LOCATION
+    )
+
+    var currentTargetImageView: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(activityMainBinding.root)
+
+        requestPermissions(permissionList, 0)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -39,11 +63,28 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        // 런처 초기화
+        settingAlbumLauncher()
+
         // 네비게이션 뷰를 구성하는 메서드를 호출한다.
         settingNavigationView()
 
         // 첫 화면을 설정해준다.
         replaceFragment(FragmentName.ITEM_LIST_FRAGMENT, false, false, null)
+    }
+
+    // Fragment에서 사용할 ImageView 설정
+    fun setTargetImageView(imageView: ImageView) {
+        currentTargetImageView = imageView
+    }
+
+    // 앨범 런처 호출 메서드
+    fun launchAlbumIntent() {
+        val albumIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+            type = "image/*"
+            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*"))
+        }
+        albumLauncher.launch(albumIntent)
     }
 
     // 네비게이션 뷰를 구성하는 메서드
@@ -155,5 +196,51 @@ class MainActivity : AppCompatActivity() {
             callback()
         }
         builder.show()
+    }
+
+    fun saveBitmapToFile(bitmap: Bitmap, fileName: String): String {
+        val file = File(filesDir, fileName)
+        return try {
+            FileOutputStream(file).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+            }
+            file.absolutePath // 저장된 파일 경로 반환
+        } catch (e: IOException) {
+            e.printStackTrace()
+            ""
+        }
+    }
+
+    fun settingAlbumLauncher() {
+        albumLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.data?.let { photoUri ->
+                    val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        val source = ImageDecoder.createSource(contentResolver, photoUri)
+                        ImageDecoder.decodeBitmap(source)
+                    } else {
+                        val cursor = contentResolver.query(photoUri, null, null, null, null)
+                        cursor?.moveToNext()
+                        val idx = cursor!!.getColumnIndex(MediaStore.Images.Media.DATA)
+                        val source = cursor.getString(idx)
+                        cursor.close()
+                        BitmapFactory.decodeFile(source)
+                    }
+
+                    // ImageView에 표시
+                    currentTargetImageView?.setImageBitmap(bitmap)
+
+                    // Bitmap 저장
+                    val savedPath = saveBitmapToFile(bitmap, "selectedImage_${System.currentTimeMillis()}.png")
+                    if (savedPath.isNotEmpty()) {
+                        println("이미지가 성공적으로 저장되었습니다: $savedPath")
+
+                        // 저장된 경로를 AddItemFragment에 전달
+                        val fragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as? AddItemFragment
+                        fragment?.updateSelectedImagePath(savedPath)
+                    }
+                }
+            }
+        }
     }
 }

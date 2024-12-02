@@ -1,6 +1,7 @@
 package com.lion.shopmanager.fragment
 
 import android.content.DialogInterface
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -75,9 +76,9 @@ class ReadItemFragment : Fragment() {
     }
 
     // 제품 데이터를 가져와 보여주는 메서드
-    fun settingTextField(){
+    fun settingTextField() {
         CoroutineScope(Dispatchers.Main).launch {
-            val work1 = async(Dispatchers.IO){
+            val work1 = async(Dispatchers.IO) {
                 // 제품 번호를 가져온다.
                 val itemIdx = arguments?.getInt("itemIdx")
                 // 제품 데이터를 가져온다.
@@ -90,9 +91,11 @@ class ReadItemFragment : Fragment() {
                 textFieldReadItemPrice.editText?.setText(itemModel.itemPrice.toString())
                 textFieldReadItemAbout.editText?.setText(itemModel.itemAbout)
                 textFieldReadItemSellingOrSold.editText?.setText(itemModel.itemSellinOrSold.str)
+                imageReadView.setImageBitmap(BitmapFactory.decodeFile(itemModel.itemImage))
             }
         }
     }
+
 
     // 제품 정보를 삭제하는 메서드
     fun deleteItemData(){

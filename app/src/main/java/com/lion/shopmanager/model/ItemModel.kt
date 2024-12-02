@@ -12,7 +12,9 @@ data class ItemModel (
     // 제품 정보
     var itemAbout:String,
     // 판매 유무
-    var itemSellinOrSold:ItemSellingOrSold
+    var itemSellinOrSold:ItemSellingOrSold,
     // 제품 사진
-    // var itemImage:String
+    var itemImage:String,
+    // 저장 날짜
+    var itemDate:String
 )
