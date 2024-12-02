@@ -6,18 +6,18 @@
         android:id="@+id/navigation_menu_item_all"
         android:checkable="true"
         android:icon="@drawable/inventory_2_24px"
-        android:title="전체 물건"
+        android:title="전체 제품 목록"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/navigation_menu_item_selling"
         android:checkable="true"
         android:icon="@drawable/sell_24px"
-        android:title="판매중인 물건"
+        android:title="판매중인 제품"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/navigation_menu_item_sold"
         android:checkable="true"
         android:icon="@drawable/check_circle_24px"
-        android:title="판매된 물건"
+        android:title="판매된 제품"
         app:showAsAction="ifRoom" />
 </menu>

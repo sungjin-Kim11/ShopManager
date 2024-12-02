@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ import com.lion.shopmanager.databinding.RowText2Binding
 import com.lion.shopmanager.model.ItemModel
 import com.lion.shopmanager.repository.ItemRepository
 import com.lion.shopmanager.util.FragmentName
+import com.lion.shopmanager.util.ItemSellingOrSold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -135,9 +137,26 @@ class ItemListFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolderMain, position: Int) {
-            holder.rowText2Binding.textViewRowName.text = itemList[position].itemName
-            holder.rowText2Binding.imageListItemView.setImageURI(itemList[position].itemImage.toUri())
-            holder.rowText2Binding.textViewDate.text = itemList[position].itemDate
+            val item = itemList[position]
+
+            // 텍스트 및 이미지 설정
+            holder.rowText2Binding.textViewRowName.text = item.itemName
+            holder.rowText2Binding.imageListItemView.setImageURI(item.itemImage.toUri())
+            holder.rowText2Binding.textViewDate.text = item.itemDate
+
+            // 판매 상태에 따라 텍스트 색상 및 배경 색상 설정
+            if (item.itemSellinOrSold == ItemSellingOrSold.ITEM_SELLING) {
+                // 판매중 상태
+                holder.rowText2Binding.root.setBackgroundColor(
+                    ContextCompat.getColor(holder.itemView.context, android.R.color.transparent)
+                )
+            } else {
+                // 판매완료 상태
+                holder.rowText2Binding.root.setBackgroundColor(
+                    ContextCompat.getColor(holder.itemView.context, R.color.sold_color_background)
+                )
+            }
         }
+
     }
 }
