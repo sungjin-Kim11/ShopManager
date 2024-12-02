@@ -126,8 +126,8 @@ class AddItemFragment : Fragment() {
                 else -> ItemSellingOrSold.ITEM_SOLD
             }
 
-            val currentDateTime = LocalDateTime.now() // 현재 날짜와 시간
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss") // 원하는 형식
+            val currentDateTime = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val itemDate = currentDateTime.format(formatter)
 
             // ViewModel 객체에 담는다.

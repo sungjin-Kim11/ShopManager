@@ -63,21 +63,18 @@ toolbar_read_item_menu
 
 ---
 
-## 팀 기본 구성
-
-### MainFragment
-- Toolbar -> Drawer
-- TextField (검색 기능)
+### ItemListFragment
+- Toolbar -> 목록, 검색
 - RecycleView
 - FAB 버튼 -> 추가
 
 ### DrawerLayout
-- 전체 물품
-- 판매중
-- 판매완료 -> filter tkdyd
+- 전체 제품 목록
+- 판매중인 제퓸
+- 판매된 제품
 
-### InputFragment
-- Toolbar (뒤로가기, 저장)
+### AddItemFragment
+- Toolbar -> 뒤로가기, 저장
 - scrollView 사용
 - TextField (상품 명)
 - TextField (상품 가격)
@@ -85,19 +82,32 @@ toolbar_read_item_menu
 - ImageView (상품 사진 보여주기)
 - Button(사진 찾아보기)
 
-### ShowFragment
-- Toolbar (뒤로가기, 수정, 삭제)
+### ReadItemFragment
+- Toolbar -> 뒤로가기, 수정, 삭제
 - scrollView 사용
-- ImageView (상품 이미지)
 - TextView (상품 명)
 - TextView (상품 가격)
 - TextView (상품 설명)
+- ImageView (상품 이미지)
 
-### ModifyFragment
-- Toolbar (뒤로가기, 저장)
+### ModifyItemFragment
+- Toolbar -> 뒤로가기, 저장
 - scrollView 사용
 - TextField (상품 명)
 - TextField (상품 가격)
 - TextField (상품 설명)
 - ImageView (상품 사진 보여주기)
 - Button(사진 찾아보기)
+
+### FilterSellingFragment
+- Toolbar - 목록
+- RecycleView
+
+### FilterSoldFragment
+- Toolbar - 목록
+- RecycleView
+
+### SearchItemFragment
+- Toolbar - 뒤로가기
+- TextField (검색)
+- RecycleView

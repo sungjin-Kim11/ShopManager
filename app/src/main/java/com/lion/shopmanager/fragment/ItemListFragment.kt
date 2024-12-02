@@ -141,7 +141,7 @@ class ItemListFragment : Fragment() {
             holder.rowText2Binding.textViewRowName.text = item.itemName
             holder.rowText2Binding.textViewDate.text = item.itemDate
 
-            // 이미지 설정: 파일 경로 확인 후 기본 이미지 처리
+            // 이미지 설정
             if (item.itemImage.isNotEmpty()) {
                 val imageFile = File(item.itemImage)
                 if (imageFile.exists() && imageFile.isFile) {
