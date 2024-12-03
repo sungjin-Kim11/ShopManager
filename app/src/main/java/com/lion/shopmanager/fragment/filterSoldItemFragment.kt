@@ -50,7 +50,7 @@ class filterSoldItemFragment : Fragment() {
     // Toolbar를 구성하는 메서드
     fun settingToolbar(){
         fragmentFilterSoldItemBinding.apply {
-            toolbarSoldItemList.title = "판매완료된 제품 목록"
+            toolbarSoldItemList.title = "판매된 제품 목록"
             toolbarSoldItemList.setNavigationIcon(R.drawable.menu_24px)
             toolbarSoldItemList.setNavigationOnClickListener {
                 mainActivity.activityMainBinding.drawerLayoutMain.open()
